@@ -8,7 +8,10 @@ import os
 import logging
 import time
 import socket
-import md5
+try:
+    import md5
+except ImportError:
+    from hashlib import md5
 from purkinje_messages.message import(
     SessionStartedEvent,
     TestCaseFinishedEvent,
@@ -70,7 +73,7 @@ class TestMonitorPlugin(object):
                                  current_dir)
 
     def suite_hash(self):
-        return md5.md5(self.suite_name()).hexdigest()
+        return md5(self.suite_name().encode('utf-8')).hexdigest()
 
     def send_event(self, event):
         """Send event via WebSocket connection.
